@@ -20,7 +20,7 @@ def check(setup: Setup, cfg: RiskConfig, open_positions: int = 0) -> RiskDecisio
         return RiskDecision(False, 0, ["stop is not below entry"])
     if open_positions >= cfg.max_open_positions:
         reasons.append(f"already {open_positions} open positions (max {cfg.max_open_positions})")
-    if setup.reward_risk < cfg.min_reward_risk:
+    if setup.reward_risk < cfg.min_reward_risk - 1e-9:  # tolerate float rounding at exactly the minimum
         reasons.append(f"reward/risk {setup.reward_risk:.2f} < {cfg.min_reward_risk}")
     if setup.risk_per_share / setup.entry > cfg.max_stop_pct:
         reasons.append(f"stop {setup.risk_per_share / setup.entry:.1%} away exceeds {cfg.max_stop_pct:.0%}")

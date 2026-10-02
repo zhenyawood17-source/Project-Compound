@@ -51,6 +51,11 @@ class RiskTest(unittest.TestCase):
         self.assertEqual(d.shares, 0)
         self.assertEqual(len(d.reasons), 2)
 
+    def test_accepts_exactly_min_reward_risk_despite_rounding(self):
+        entry, stop = 87.64, 82.73
+        d = check(Setup("T", "pullback", D0, entry, stop, entry + 2 * (entry - stop)), RiskConfig())
+        self.assertTrue(d.approved, d.reasons)
+
     def test_rejects_when_max_positions_reached(self):
         d = check(Setup("T", "breakout", D0, 100, 98, 104), RiskConfig(), open_positions=5)
         self.assertFalse(d.approved)
